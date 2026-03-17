@@ -5,5 +5,4 @@ import jakarta.ws.rs.core.Application;
 
 @ApplicationPath("/api/v1")
 public class SmartCampusApplication extends Application {
-    // empty = auto discover @Path classes
 }
