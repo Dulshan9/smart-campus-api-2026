@@ -19,12 +19,11 @@ public class Main {
         );
         jerseyServlet.setInitOrder(0);
 
-        // Map Jersey to handle everything under root
         context.addServlet(jerseyServlet, "/*");
 
         server.setHandler(context);
 
-        System.out.println("Starting server on http://localhost:8080/api/v1 ...");
+        System.out.println("Smart Campus API starting → http://localhost:8080/api/v1");
         server.start();
         server.join();
     }
