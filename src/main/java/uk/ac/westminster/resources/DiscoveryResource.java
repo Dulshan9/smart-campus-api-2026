@@ -16,8 +16,8 @@ public class DiscoveryResource {
     public Response getApiInfo() {
         Map<String, Object> info = Map.of(
             "apiVersion", "1.0",
-            "contact", "praveen@example.com",  // ← change to your real email
-            "description", "Smart Campus Sensor & Room Management API",
+            "contact", "praveen@example.com",  // ← change this!
+            "description", "Smart Campus API - 5COSC022W Coursework",
             "resources", Map.of(
                 "rooms", "/api/v1/rooms",
                 "sensors", "/api/v1/sensors"
