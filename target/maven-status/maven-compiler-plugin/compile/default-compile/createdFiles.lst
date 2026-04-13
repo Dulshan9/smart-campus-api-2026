@@ -1,0 +1,8 @@
+com\smartcampus\service\StudentService.class
+com\smartcampus\service\LecturerService.class
+com\smartcampus\SmartCampusApplication.class
+com\smartcampus\model\Lecturer.class
+com\smartcampus\service\CourseService.class
+com\smartcampus\resource\StudentResource.class
+com\smartcampus\model\Course.class
+com\smartcampus\model\Student.class
