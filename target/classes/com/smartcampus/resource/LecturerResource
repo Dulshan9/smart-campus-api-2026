@@ -1,0 +1,38 @@
+package com.smartcampus.resource;
+
+import com.smartcampus.model.Student;
+import com.smartcampus.service.StudentService;
+
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import java.util.List;
+
+@Path("/Lecturers")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public class LecturerResource {
+
+    LecturerService service = new LecturerService();
+
+    @GET
+    public List<Lecturer> getAll() {
+        return service.getAll();
+    }
+
+    @POST
+    public Lecturer add(Lecturer l) {
+        return service.add(l);
+    }
+
+    @PUT
+    @Path("/{id}")
+    public Lecturer update(@PathParam("id") int id, Lecturer l) {
+        return service.update(id, l);
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public void delete(@PathParam("id") int id) {
+        service.delete(id);
+    }
+}
