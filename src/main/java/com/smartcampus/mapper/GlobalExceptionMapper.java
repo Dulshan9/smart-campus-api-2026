@@ -1,11 +1,41 @@
 package com.smartcampus.mapper;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
+
+/**
+ * Catch-all exception mapper for unhandled exceptions.
+ * Returns HTTP 500 without exposing internal stack traces.
+ */
 @Provider
 public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
-    public Response toResponse(Throwable ex) {
-        return Response.status(500).entity("{\"error\":\"Internal server error\"}").build();
+    
+    private static final Logger LOGGER = Logger.getLogger(GlobalExceptionMapper.class.getName());
+    
+    @Override
+    public Response toResponse(Throwable exception) {
+        // Log the full error server-side for debugging
+        LOGGER.log(Level.SEVERE, "Unhandled exception occurred: " + exception.getMessage(), exception);
+        
+        // Return a sanitized response to the client (no stack traces!)
+        Map<String, Object> errorResponse = new LinkedHashMap<>();
+        errorResponse.put("status", 500);
+        errorResponse.put("error", "Internal Server Error");
+        errorResponse.put("message", "An unexpected error occurred. The system administrator has been notified.");
+        errorResponse.put("timestamp", System.currentTimeMillis());
+        errorResponse.put("reference", "ERR-" + System.currentTimeMillis() % 100000);
+        
+        // Note: We deliberately DO NOT include exception details for security reasons
+        
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity(errorResponse)
+                .type("application/json")
+                .build();
     }
 }

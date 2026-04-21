@@ -1,20 +1,69 @@
 package com.smartcampus.filter;
 
-import javax.ws.rs.container.*;
-import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import jakarta.ws.rs.container.ContainerRequestContext;
+import jakarta.ws.rs.container.ContainerRequestFilter;
+import jakarta.ws.rs.container.ContainerResponseContext;
+import jakarta.ws.rs.container.ContainerResponseFilter;
+import jakarta.ws.rs.container.PreMatching;
+import jakarta.ws.rs.ext.Provider;
+
+/**
+ * Filter that logs all incoming requests and outgoing responses.
+ * Implements both ContainerRequestFilter and ContainerResponseFilter.
+ */
 @Provider
+@PreMatching
 public class LoggingFilter implements ContainerRequestFilter, ContainerResponseFilter {
-
-    private static final Logger logger = Logger.getLogger("API");
-
-    public void filter(ContainerRequestContext request) throws IOException {
-        logger.info("Request: " + request.getMethod() + " " + request.getUriInfo().getPath());
+    
+    private static final Logger LOGGER = Logger.getLogger(LoggingFilter.class.getName());
+    
+    @Override
+    public void filter(ContainerRequestContext requestContext) throws IOException {
+        String method = requestContext.getMethod();
+        String uri = requestContext.getUriInfo().getRequestUri().toString();
+        String clientIp = getClientIp(requestContext);
+        
+        LOGGER.info(String.format("[REQUEST]  %s | %s | Client: %s", method, uri, clientIp));
+        
+        // Store start time for duration calculation
+        requestContext.setProperty("startTime", System.currentTimeMillis());
     }
-
-    public void filter(ContainerRequestContext req, ContainerResponseContext res) throws IOException {
-        logger.info("Response: " + res.getStatus());
+    
+    @Override
+    public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) {
+        String method = requestContext.getMethod();
+        String uri = requestContext.getUriInfo().getRequestUri().toString();
+        int status = responseContext.getStatus();
+        
+        // Calculate request duration
+        Long startTime = (Long) requestContext.getProperty("startTime");
+        long duration = startTime != null ? System.currentTimeMillis() - startTime : -1;
+        
+        String statusFamily = getStatusFamily(status);
+        LOGGER.info(String.format("[RESPONSE] %s | %s | Status: %d %s | Duration: %dms", 
+                method, uri, status, statusFamily, duration));
+    }
+    
+    private String getClientIp(ContainerRequestContext requestContext) {
+        // Try to get from X-Forwarded-For header first (for proxies)
+        String forwardedFor = requestContext.getHeaderString("X-Forwarded-For");
+        if (forwardedFor != null && !forwardedFor.isEmpty()) {
+            return forwardedFor.split(",")[0].trim();
+        }
+        
+        // Fall back to remote address
+        Object remoteAddr = requestContext.getProperty("jakarta.servlet.request.remote_addr");
+        return remoteAddr != null ? remoteAddr.toString() : "unknown";
+    }
+    
+    private String getStatusFamily(int status) {
+        if (status >= 200 && status < 300) return "(SUCCESS)";
+        if (status >= 300 && status < 400) return "(REDIRECT)";
+        if (status >= 400 && status < 500) return "(CLIENT ERROR)";
+        if (status >= 500) return "(SERVER ERROR)";
+        return "";
     }
 }
