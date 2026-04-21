@@ -1,12 +1,13 @@
 package com.smartcampus;
 
-import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
-import org.glassfish.jersey.server.ResourceConfig;
-import com.smartcampus.config.SmartCampusApplication;
-
 import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
+import org.glassfish.jersey.server.ResourceConfig;
+
+import com.smartcampus.config.SmartCampusApplication;
 
 /**
  * Main server class that bootstraps the Smart Campus REST API using Grizzly embedded HTTP server.
@@ -16,7 +17,7 @@ public class SmartCampusServer {
     private static final Logger LOGGER = Logger.getLogger(SmartCampusServer.class.getName());
     
     // Base URI for the API
-    public static final String BASE_URI = "http://localhost:8080/api/v1/";
+    public static final String BASE_URI = "http://localhost:8080/";
     
     public static void main(String[] args) {
         try {
@@ -45,6 +46,7 @@ public class SmartCampusServer {
             LOGGER.info("  GET  /api/v1/sensors/{id}/readings - Get sensor readings");
             LOGGER.info("  POST /api/v1/sensors/{id}/readings - Add sensor reading");
             LOGGER.info("========================================");
+            System.out.println("SERVER STARTED ON PORT 8080 - Open http://localhost:8080/api/v1");
             LOGGER.info("Press Enter to stop the server...");
             
             // Keep the server running until Enter is pressed

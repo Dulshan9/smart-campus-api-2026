@@ -11,10 +11,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 
-/**
- * Root discovery endpoint providing HATEOAS links and API metadata.
- */
-@Path("/")
+@Path("/api/v1")
 public class DiscoveryResource {
     
     @GET
@@ -22,41 +19,23 @@ public class DiscoveryResource {
     public Response getApiMetadata(@Context UriInfo uriInfo) {
         Map<String, Object> metadata = new LinkedHashMap<>();
         
-        // API Information
         metadata.put("api_version", "v1");
         metadata.put("name", "Smart Campus Sensor & Room Management API");
         metadata.put("description", "RESTful API for managing university campus rooms and environmental IoT sensors");
         
-        // Administrative Contact
         Map<String, String> administrator = new LinkedHashMap<>();
         administrator.put("name", "Hamed Hamzeh");
         administrator.put("email", "h.hamzeh@westminster.ac.uk");
         administrator.put("department", "Computer Science and Engineering");
-        administrator.put("institution", "University of Westminster");
         metadata.put("administrator", administrator);
         
-        // Documentation
         metadata.put("documentation", "https://github.com/Dulshan9/smart-campus-api-2026");
         
-        // HATEOAS Links
-        String baseUri = uriInfo.getBaseUri().toString();
         Map<String, Object> resources = new LinkedHashMap<>();
-        
-        Map<String, String> roomsLink = new LinkedHashMap<>();
-        roomsLink.put("href", baseUri + "rooms");
-        roomsLink.put("methods", "GET, POST");
-        roomsLink.put("description", "Manage campus rooms");
-        resources.put("rooms", roomsLink);
-        
-        Map<String, String> sensorsLink = new LinkedHashMap<>();
-        sensorsLink.put("href", baseUri + "sensors");
-        sensorsLink.put("methods", "GET, POST");
-        sensorsLink.put("description", "Manage IoT sensors (supports ?type filter)");
-        resources.put("sensors", sensorsLink);
-        
+        resources.put("rooms", "/api/v1/rooms");
+        resources.put("sensors", "/api/v1/sensors");
         metadata.put("resources", resources);
         
-        // Server Information
         metadata.put("timestamp", System.currentTimeMillis());
         metadata.put("status", "operational");
         
