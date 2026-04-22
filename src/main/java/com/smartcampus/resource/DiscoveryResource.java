@@ -11,7 +11,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 
-@Path("/api/v1")
+@Path("/v1")
 public class DiscoveryResource {
     
     @GET

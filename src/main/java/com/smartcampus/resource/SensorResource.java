@@ -23,7 +23,7 @@ import jakarta.ws.rs.core.Response;
 /**
  * Resource class for managing Sensor entities.
  */
-@Path("/api/v1/sensors")
+@Path("/v1/sensors")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class SensorResource {
