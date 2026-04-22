@@ -3,12 +3,12 @@ package com.smartcampus.filter;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import jakarta.ws.rs.container.ContainerRequestContext;
-import jakarta.ws.rs.container.ContainerRequestFilter;
-import jakarta.ws.rs.container.ContainerResponseContext;
-import jakarta.ws.rs.container.ContainerResponseFilter;
-import jakarta.ws.rs.container.PreMatching;
-import jakarta.ws.rs.ext.Provider;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.container.ContainerResponseContext;
+import javax.ws.rs.container.ContainerResponseFilter;
+import javax.ws.rs.container.PreMatching;
+import javax.ws.rs.ext.Provider;
 
 /**
  * Filter that logs all incoming requests and outgoing responses.
@@ -55,7 +55,7 @@ public class LoggingFilter implements ContainerRequestFilter, ContainerResponseF
         }
         
         // Fall back to remote address
-        Object remoteAddr = requestContext.getProperty("jakarta.servlet.request.remote_addr");
+        Object remoteAddr = requestContext.getProperty("javax.servlet.request.remote_addr");
         return remoteAddr != null ? remoteAddr.toString() : "unknown";
     }
     

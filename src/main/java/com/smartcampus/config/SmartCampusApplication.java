@@ -3,8 +3,6 @@ package com.smartcampus.config;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.glassfish.jersey.jackson.JacksonFeature;
-
 import com.smartcampus.filter.LoggingFilter;
 import com.smartcampus.mapper.GlobalExceptionMapper;
 import com.smartcampus.mapper.ResourceNotFoundExceptionMapper;
@@ -13,20 +11,18 @@ import com.smartcampus.mapper.SensorUnavailableExceptionMapper;
 import com.smartcampus.resource.DiscoveryResource;
 import com.smartcampus.resource.RoomResource;
 import com.smartcampus.resource.SensorResource;
+import com.smartcampus.resource.TestResource;
 
-import jakarta.ws.rs.core.Application;
+import javax.ws.rs.core.Application;
 
-// NO @ApplicationPath here - Tomcat uses web.xml instead!
 public class SmartCampusApplication extends Application {
 
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> classes = new HashSet<>();
 
-        // Jackson Feature
-        classes.add(JacksonFeature.class);
-
         // Resources
+        classes.add(TestResource.class);
         classes.add(DiscoveryResource.class);
         classes.add(RoomResource.class);
         classes.add(SensorResource.class);

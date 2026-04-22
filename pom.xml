@@ -18,7 +18,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jersey.version>3.1.5</jersey.version>
+        <jersey.version>2.41</jersey.version>
     </properties>
     
     <dependencies>
@@ -29,7 +29,7 @@
             <version>${jersey.version}</version>
         </dependency>
         
-        <!-- Jersey Servlet Container (REQUIRED for Tomcat) -->
+        <!-- Jersey Servlet Container -->
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet</artifactId>
@@ -50,34 +50,27 @@
             <version>${jersey.version}</version>
         </dependency>
         
-        <!-- Jackson JAX-RS Provider -->
+        <!-- JAX-RS API (Javax) -->
         <dependency>
-            <groupId>com.fasterxml.jackson.jakarta.rs</groupId>
-            <artifactId>jackson-jakarta-rs-json-provider</artifactId>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.1.1</version>
+        </dependency>
+        
+        <!-- Servlet API (Javax for Tomcat 9) -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- Jackson for JSON (Javax compatible) -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.jaxrs</groupId>
+            <artifactId>jackson-jaxrs-json-provider</artifactId>
             <version>2.16.1</version>
         </dependency>
-        
-        <!-- Jakarta Annotations -->
-        <dependency>
-            <groupId>jakarta.ws.rs</groupId>
-            <artifactId>jakarta.ws.rs-api</artifactId>
-            <version>3.1.0</version>
-        </dependency>
-        
-        <!-- Jakarta Activation -->
-        <dependency>
-            <groupId>jakarta.activation</groupId>
-            <artifactId>jakarta.activation-api</artifactId>
-            <version>2.1.2</version>
-        </dependency>
-        
-        <!-- Jakarta Servlet API (for Tomcat) -->
-        <dependency>
-    <groupId>javax.servlet</groupId>
-    <artifactId>javax.servlet-api</artifactId>
-    <version>4.0.1</version>
-    <scope>provided</scope>
-</dependency>
     </dependencies>
     
     <build>

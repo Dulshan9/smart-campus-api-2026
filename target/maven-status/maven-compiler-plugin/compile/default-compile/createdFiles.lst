@@ -13,5 +13,6 @@ com\smartcampus\mapper\ResourceNotFoundExceptionMapper.class
 com\smartcampus\model\Room.class
 com\smartcampus\resource\DiscoveryResource.class
 com\smartcampus\resource\RoomResource.class
+com\smartcampus\resource\TestResource.class
 com\smartcampus\model\SensorReading.class
 com\smartcampus\resource\SensorReadingResource.class

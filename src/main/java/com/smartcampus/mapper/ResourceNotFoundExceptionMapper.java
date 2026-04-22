@@ -5,9 +5,9 @@ import java.util.Map;
 
 import com.smartcampus.exception.ResourceNotFoundException;
 
-import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.ext.ExceptionMapper;
-import jakarta.ws.rs.ext.Provider;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
  * Maps ResourceNotFoundException to HTTP 422 Unprocessable Entity.
