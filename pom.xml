@@ -9,7 +9,7 @@
     <groupId>com.smartcampus</groupId>
     <artifactId>smart-campus-api</artifactId>
     <version>1.0.0</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     
     <name>Smart Campus API</name>
     <description>RESTful API for Smart Campus Sensor and Room Management</description>

@@ -45,7 +45,7 @@ public class SmartCampusServer {
             LOGGER.info("  POST /api/v1/sensors            - Register a sensor");
             LOGGER.info("  GET  /api/v1/sensors/{id}/readings - Get sensor readings");
             LOGGER.info("  POST /api/v1/sensors/{id}/readings - Add sensor reading");
-            LOGGER.info("========================================");
+            LOGGER.info("___________________________________________________________________________________");
             System.out.println("SERVER STARTED ON PORT 8080 - Open http://localhost:8080/api/v1");
             LOGGER.info("Press Enter to stop the server...");
             
