@@ -24,7 +24,7 @@ import jakarta.ws.rs.core.Response;
 /**
  * Resource class for managing Room entities.
  */
-@Path("/rooms")
+@Path("/api/v1/rooms")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class RoomResource {
