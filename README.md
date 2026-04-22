@@ -23,51 +23,121 @@ markdown
 
 ### Build and Deploy
 
-```bash
+Clone the repository and build the WAR file:
 git clone https://github.com/Dulshan9/smart-campus-api-2026.git
 cd smart-campus-api-2026
 mvn clean package
-copy target\smart-campus-api.war "C:\Program Files\Apache Software Foundation\Tomcat 9.0\webapps\"
-net start Tomcat9
-Access the API at: http://localhost:8080/smart-campus-api/api/v1
 
-API Endpoints
-Method	URL	Description
-GET	/api/v1	Discovery endpoint
-GET	/api/v1/rooms	List all rooms
-POST	/api/v1/rooms	Create a room
-GET	/api/v1/rooms/{id}	Get room by ID
-DELETE	/api/v1/rooms/{id}	Delete room
-GET	/api/v1/sensors	List all sensors
-GET	/api/v1/sensors?type={type}	Filter sensors
-POST	/api/v1/sensors	Create sensor
-GET	/api/v1/sensors/{id}/readings	Get readings
-POST	/api/v1/sensors/{id}/readings	Add reading
-Sample Requests
-bash
-# Discovery
+text
+
+Deploy to Tomcat (run as Administrator):
+copy target\smart-campus-api.war "C:\Program Files\Apache Software Foundation\Tomcat 9.0\webapps"
+net start Tomcat9
+
+text
+
+Access the API at:
+http://localhost:8080/smart-campus-api/api/v1
+
+text
+
+---
+
+## API Endpoints
+
+| Method | URL | Description |
+|--------|-----|-------------|
+| GET | /api/v1 | Discovery endpoint |
+| GET | /api/v1/rooms | List all rooms |
+| POST | /api/v1/rooms | Create a room |
+| GET | /api/v1/rooms/{id} | Get room by ID |
+| DELETE | /api/v1/rooms/{id} | Delete room |
+| GET | /api/v1/sensors | List all sensors |
+| GET | /api/v1/sensors?type={type} | Filter sensors by type |
+| POST | /api/v1/sensors | Create a sensor |
+| GET | /api/v1/sensors/{id}/readings | Get sensor readings |
+| POST | /api/v1/sensors/{id}/readings | Add a reading |
+
+---
+
+## Sample Requests
+
+**Discovery Endpoint**
 curl -X GET http://localhost:8080/smart-campus-api/api/v1
 
-# Create room
-curl -X POST http://localhost:8080/smart-campus-api/api/v1/rooms -H "Content-Type: application/json" -d '{"roomId":"R105","name":"Lab","roomType":"LAB","capacity":35,"floor":3,"location":"Cavendish"}'
+text
 
-# Create sensor
-curl -X POST http://localhost:8080/smart-campus-api/api/v1/sensors -H "Content-Type: application/json" -d '{"sensorId":"S010","type":"TEMPERATURE","status":"ACTIVE","roomId":"R001"}'
+**Create a Room**
+curl -X POST http://localhost:8080/smart-campus-api/api/v1/rooms -H "Content-Type: application/json" -d "{"roomId":"R105","name":"Advanced Lab","roomType":"LAB","capacity":35,"floor":3,"location":"Cavendish Campus"}"
 
-# Filter sensors
+text
+
+**Get All Rooms**
+curl -X GET http://localhost:8080/smart-campus-api/api/v1/rooms
+
+text
+
+**Create a Sensor**
+curl -X POST http://localhost:8080/smart-campus-api/api/v1/sensors -H "Content-Type: application/json" -d "{"sensorId":"S010","type":"TEMPERATURE","status":"ACTIVE","roomId":"R001"}"
+
+text
+
+**Filter Sensors by Type**
 curl -X GET "http://localhost:8080/smart-campus-api/api/v1/sensors?type=CO2"
 
-# Add reading
-curl -X POST http://localhost:8080/smart-campus-api/api/v1/sensors/S001/readings -H "Content-Type: application/json" -d '{"value":24.5}'
+text
+
+**Add a Sensor Reading**
+curl -X POST http://localhost:8080/smart-campus-api/api/v1/sensors/S001/readings -H "Content-Type: application/json" -d "{"value":24.5}"
+
+text
+
+**Delete a Room (Conflict Example)**
+curl -X DELETE http://localhost:8080/smart-campus-api/api/v1/rooms/R001
+
+text
+
+---
+
+## Error Response Examples
+
+**409 Conflict (Delete Room with Sensors)**
+```json
+{
+  "status": 409,
+  "error": "Conflict",
+  "message": "Cannot delete room - it contains active sensors",
+  "roomId": "R001",
+  "sensorCount": 3
+}
+422 Unprocessable Entity (Invalid Room Reference)
+
+json
+{
+  "status": 422,
+  "error": "Unprocessable Entity",
+  "message": "Room with ID 'INVALID' not found",
+  "resourceType": "Room"
+}
+403 Forbidden (Sensor in Maintenance)
+
+json
+{
+  "status": 403,
+  "error": "Forbidden",
+  "message": "Sensor is not available for readings",
+  "sensorId": "S005",
+  "currentStatus": "MAINTENANCE"
+}
 Theoretical Questions and Answers
 Part 1: Service Architecture and Setup
 Q1: Explain the default lifecycle of a JAX-RS Resource class. Is a new instance instantiated for every incoming request, or does the runtime treat it as a singleton? Elaborate on how this architectural decision impacts the way you manage and synchronize your in-memory data structures to prevent data loss or race conditions.
 
-JAX-RS resource classes are request-scoped by default. A new instance is created for each HTTP request and destroyed after the request completes. This means instance variables cannot persist data across requests. To maintain application state, I implemented a Singleton DataStore class using double-checked locking. The shared data structures use ConcurrentHashMap to ensure thread safety when multiple concurrent requests access the data, preventing race conditions and data corruption.
+JAX-RS resource classes are request-scoped by default. A new instance is created for each HTTP request and destroyed after completion. This means instance variables cannot persist data across requests. To maintain application state, I implemented a Singleton DataStore class using double-checked locking. The shared data structures use ConcurrentHashMap to ensure thread safety when multiple concurrent requests access the data, preventing race conditions and data corruption.
 
 Q2: Why is the provision of Hypermedia (links and navigation within responses) considered a hallmark of advanced RESTful design (HATEOAS)? How does this approach benefit client developers compared to static documentation?
 
-HATEOAS allows clients to navigate the API dynamically through links provided in responses rather than hardcoded URLs. This provides discoverability, loose coupling between client and server, and self-documentation. The server can change URL structures without breaking clients. My implementation includes a discovery endpoint at /api/v1 that returns links to available resources.
+HATEOAS allows clients to navigate the API dynamically through links provided in responses rather than hardcoded URLs. This provides discoverability, loose coupling, and self-documentation. The server can change URL structures without breaking clients. My implementation includes a discovery endpoint at /api/v1 that returns links to available resources.
 
 Part 2: Room Management
 Q3: When returning a list of rooms, what are the implications of returning only IDs versus returning the full room objects? Consider network bandwidth and client-side processing.
@@ -90,7 +160,7 @@ Query parameters filter collections semantically, while path parameters identify
 Part 4: Deep Nesting with Sub-Resources
 Q7: Discuss the architectural benefits of the Sub-Resource Locator pattern. How does delegating logic to separate classes help manage complexity in large APIs compared to defining every nested path in one massive controller class?
 
-The pattern separates concerns by delegating nested paths to dedicated classes. Each class handles one responsibility, making code easier to understand, test, and maintain. It avoids monolithic controllers with hundreds of lines of code. The URL hierarchy mirrors the class structure, making the codebase intuitive.
+The pattern separates concerns by delegating nested paths to dedicated classes. Each class handles one responsibility, making code easier to understand, test, and maintain. It avoids monolithic controllers with hundreds of lines of code. The URL hierarchy mirrors the class structure.
 
 Q8: A successful POST to a reading must trigger an update to the currentValue field on the corresponding parent Sensor object. How is this side effect implemented?
 
@@ -107,7 +177,7 @@ Stack traces reveal package structures, library versions, file system paths, and
 
 Q11: Why is it advantageous to use JAX-RS filters for cross-cutting concerns like logging, rather than manually inserting Logger.info() statements inside every single resource method?
 
-Filters centralise logging logic in one location, eliminating code duplication across resource methods. Changes to logging format require modification in only one class. Filters execute automatically for every request, ensuring comprehensive coverage without relying on developers to remember adding logging statements. This separates infrastructure concerns from business logic.
+Filters centralise logging logic in one location, eliminating code duplication across resource methods. Changes to logging format require modification in only one class. Filters execute automatically for every request, ensuring comprehensive coverage without relying on developers to remember adding logging statements.
 
 Features Implemented
 CRUD operations for Room and Sensor entities
@@ -132,5 +202,6 @@ Author
 Praveen Dulshan Wijesundara
 Student ID: w2120636 / 20231294
 Module: Client-Server Architectures (5COSC022W)
+University of Westminster / IIT
 
 GitHub Repository: https://github.com/Dulshan9/smart-campus-api-2026
