@@ -2,7 +2,6 @@ com\smartcampus\exception\RoomNotEmptyException.class
 com\smartcampus\mapper\GlobalExceptionMapper.class
 com\smartcampus\store\DataStore.class
 com\smartcampus\model\Sensor.class
-com\smartcampus\SmartCampusServer.class
 com\smartcampus\exception\SensorUnavailableException.class
 com\smartcampus\mapper\RoomNotEmptyExceptionMapper.class
 com\smartcampus\exception\ResourceNotFoundException.class
